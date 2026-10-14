@@ -4,4 +4,8 @@ Pagina web statica (un solo `index.html`, niente build) che per partite, film e 
 
 **Online:** https://micheleguidaa.github.io/streamfinder/
 
-Per provarla in locale basta aprire `index.html` nel browser.
+- Filtri per categoria e "solo gratis"; la ricerca guarda titoli, piattaforme e Paesi (anche senza accenti).
+- "Cerca" apre la ricerca del titolo direttamente su JustWatch, RaiPlay, Play RSI, Tubi e YouTube.
+- Ogni piattaforma ha i passaggi, il CAP da copiare e il link al sito.
+
+Per provarla in locale basta aprire `index.html` nel browser. I dati sono nell'array `DATA` in fondo al file.

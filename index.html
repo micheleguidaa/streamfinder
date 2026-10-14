@@ -2,8 +2,11 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111827">
+  <meta name="description" content="Dove vedere partite, film e serie TV gratis o al prezzo più basso, anche sulle emittenti estere.">
   <title>StreamFinder Global - Gratis & Prezzo Più Basso</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
   <style>
     :root {
       --bg: #0b0f19;
@@ -16,9 +19,12 @@
       --amber: #f59e0b;
       --amber-bg: rgba(245, 158, 11, 0.12);
       --indigo: #6366f1;
+      --sky: #38bdf8;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: var(--bg); color: var(--text); padding-bottom: 60px; line-height: 1.45; }
+    a { color: var(--sky); }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
     header { background: #111827; border-bottom: 1px solid var(--card-border); padding: 14px 16px; position: sticky; top: 0; z-index: 50; }
     .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 900px; margin: 0 auto; }
     .logo { font-size: 19px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; }
@@ -28,20 +34,24 @@
 
     /* Search & Filters */
     .search-box { display: flex; gap: 8px; margin-bottom: 14px; }
-    .search-input { flex: 1; background: var(--card); border: 1px solid var(--card-border); color: #fff; padding: 12px 14px; border-radius: 10px; font-size: 15px; outline: none; }
+    .search-wrap { flex: 1; position: relative; }
+    .search-input { width: 100%; background: var(--card); border: 1px solid var(--card-border); color: #fff; padding: 12px 38px 12px 14px; border-radius: 10px; font-size: 16px; outline: none; }
     .search-input:focus { border-color: var(--green); }
-    .btn-search { background: var(--indigo); color: #fff; border: none; padding: 0 16px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; }
+    .btn-clear { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); font-size: 18px; padding: 4px 8px; cursor: pointer; display: none; }
+    .btn-clear.show { display: block; }
+    .btn-search { background: var(--indigo); color: #fff; border: none; padding: 0 16px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; white-space: nowrap; }
 
-    .filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 14px; }
+    .filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 14px; scrollbar-width: none; }
+    .filters::-webkit-scrollbar { display: none; }
     .chip { background: var(--card); color: var(--muted); border: 1px solid var(--card-border); padding: 7px 13px; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; }
     .chip.active { background: var(--green); color: #042f2e; border-color: var(--green); font-weight: 800; }
+    .count { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
 
     /* Cards */
     .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
     @media (min-width: 680px) { .grid { grid-template-columns: 1fr 1fr; } }
     .card { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-    .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-    .badge-cat { font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: #1e293b; color: #38bdf8; }
+    .badge-cat { font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: #1e293b; color: var(--sky); }
     .card-title { font-size: 18px; font-weight: 800; margin-top: 4px; }
     .card-sub { font-size: 12px; color: var(--muted); }
 
@@ -50,8 +60,8 @@
     .hl-free { background: var(--green-bg); border: 1px solid rgba(16,185,129,0.4); border-radius: 10px; padding: 10px; }
     .hl-cheap { background: var(--amber-bg); border: 1px solid rgba(245,158,11,0.4); border-radius: 10px; padding: 10px; }
     .hl-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; }
-    .hl-free .hl-label { color: var(--green); }
-    .hl-cheap .hl-label { color: var(--amber); }
+    .hl-free .hl-label, .hl-free .hl-price { color: var(--green); }
+    .hl-cheap .hl-label, .hl-cheap .hl-price { color: var(--amber); }
     .hl-plat { font-size: 14px; font-weight: 800; margin: 3px 0; color: #fff; }
     .hl-price { font-size: 12px; font-weight: 700; }
 
@@ -61,21 +71,38 @@
     .prov-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
     .prov-name { font-weight: 700; font-size: 14px; }
     .prov-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .price-tag { font-weight: 800; font-size: 13px; padding: 3px 8px; border-radius: 6px; }
+    .price-tag { font-weight: 800; font-size: 13px; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
     .price-free { background: var(--green); color: #022c22; }
     .price-paid { background: #1e293b; color: #f8fafc; }
 
-    .btn-guide { width: 100%; margin-top: 8px; background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; text-align: center; }
+    .btn-guide { width: 100%; margin-top: 8px; background: #1e293b; color: var(--sky); border: 1px solid #334155; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; text-align: center; }
+    .btn-guide .arrow { display: inline-block; transition: transform .15s; }
+    .btn-guide[aria-expanded="true"] .arrow { transform: rotate(180deg); }
     .guide-box { display: none; margin-top: 8px; background: #090d16; border: 1px solid #334155; border-radius: 8px; padding: 10px; font-size: 12px; }
     .guide-box.open { display: block; }
     .step-list { padding-left: 16px; margin: 6px 0; color: #cbd5e1; }
     .step-list li { margin-bottom: 4px; }
-    .zip-badge { display: inline-block; background: #1e293b; color: var(--amber); padding: 2px 7px; border-radius: 4px; font-family: monospace; font-weight: 700; margin-top: 4px; cursor: pointer; }
+    .zip-badge { display: inline-block; background: #1e293b; color: var(--amber); padding: 2px 7px; border-radius: 4px; border: none; font-family: monospace; font-size: 12px; font-weight: 700; margin-top: 4px; cursor: pointer; }
+    .btn-open { display: inline-block; margin-top: 8px; background: var(--green); color: #022c22; padding: 6px 12px; border-radius: 6px; font-weight: 800; text-decoration: none; }
+
+    /* Global search */
+    .global { background: var(--card); border: 1px dashed #334155; border-radius: 14px; padding: 16px; margin-top: 16px; }
+    .global h2 { font-size: 15px; margin-bottom: 4px; }
+    .global p { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+    .links { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .links a { background: #0f1523; border: 1px solid #1e293b; border-radius: 10px; padding: 10px; text-decoration: none; color: var(--text); font-size: 13px; font-weight: 700; }
+    .links a small { display: block; color: var(--muted); font-weight: 500; font-size: 11px; }
+    .empty { text-align: center; color: var(--muted); font-size: 14px; padding: 24px 8px; }
+
+    footer { max-width: 900px; margin: 24px auto 0; padding: 0 16px; font-size: 11px; color: var(--muted); }
 
     /* Modal VPN */
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 100; padding: 16px; overflow-y: auto; }
     .modal.open { display: flex; align-items: center; justify-content: center; }
     .modal-content { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; max-width: 550px; width: 100%; padding: 18px; max-height: 90vh; overflow-y: auto; }
+
+    .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%) translateY(20px); background: var(--green); color: #022c22; font-weight: 800; font-size: 13px; padding: 10px 16px; border-radius: 10px; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 200; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
@@ -83,33 +110,43 @@
 <header>
   <div class="header-top">
     <div class="logo">🌍 Stream<span>Finder</span></div>
-    <button class="btn-vpn-hub" onclick="toggleModal(true)">🔐 Guida VPN & CAP</button>
+    <button class="btn-vpn-hub" data-action="modal-open">🔐 Guida VPN & CAP</button>
   </div>
 </header>
 
-<div class="container">
-  <div class="search-box">
-    <input type="text" id="searchInput" class="search-input" placeholder="Cerca film, serie o partita (es. Inter, Dune, UFC)..." oninput="render()">
-    <button class="btn-search" onclick="addCustomSearch()">+ Cerca</button>
+<main class="container">
+  <form class="search-box" id="searchForm" role="search">
+    <div class="search-wrap">
+      <input type="search" id="searchInput" class="search-input" placeholder="Cerca film, serie o partita (es. Inter, Dune, UFC)..." autocomplete="off" aria-label="Cerca">
+      <button type="button" class="btn-clear" id="clearBtn" aria-label="Cancella ricerca">✕</button>
+    </div>
+    <button type="submit" class="btn-search">🔎 Cerca</button>
+  </form>
+
+  <div class="filters" role="group" aria-label="Filtri">
+    <button class="chip active" data-filter="ALL">Tutti</button>
+    <button class="chip" data-filter="FREE">🔥 Solo GRATIS (0€)</button>
+    <button class="chip" data-filter="SPORT">⚽ Partite & Sport</button>
+    <button class="chip" data-filter="FILM">🎬 Film</button>
+    <button class="chip" data-filter="SERIE">📺 Serie TV</button>
   </div>
 
-  <div class="filters">
-    <button class="chip active" onclick="setFilter('ALL', this)">Tutti</button>
-    <button class="chip" onclick="setFilter('FREE', this)">🔥 Solo GRATIS (0€)</button>
-    <button class="chip" onclick="setFilter('SPORT', this)">⚽ Partite & Sport</button>
-    <button class="chip" onclick="setFilter('FILM', this)">🎬 Film</button>
-    <button class="chip" onclick="setFilter('SERIE', this)">📺 Serie TV</button>
-  </div>
-
+  <div class="count" id="count" aria-live="polite"></div>
   <div id="cardsGrid" class="grid"></div>
-</div>
+  <section id="globalSearch" class="global" hidden></section>
+</main>
+
+<footer>
+  Informazioni indicative: prezzi, cataloghi e diritti TV cambiano spesso, verifica sempre sul sito ufficiale.
+  L'uso di una VPN per accedere a contenuti di un altro Paese può violare i termini di servizio delle piattaforme.
+</footer>
 
 <!-- Modal Guida Generale VPN -->
-<div id="vpnModal" class="modal" onclick="if(event.target===this) toggleModal(false)">
+<div id="vpnModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="vpnTitle">
   <div class="modal-content">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <h3 style="font-size:17px;">🔐 Come vedere i canali esteri su Android, TV e PC</h3>
-      <button onclick="toggleModal(false)" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;">✕</button>
+      <h3 id="vpnTitle" style="font-size:17px;">🔐 Come vedere i canali esteri su Android, TV e PC</h3>
+      <button data-action="modal-close" aria-label="Chiudi" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;">✕</button>
     </div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">
       Molte emittenti mondiali trasmettono <strong>legalmente e gratis</strong> partite, film e serie TV, ma bloccano gli IP fuori dal loro Paese. Ecco come sbloccarle:
@@ -123,13 +160,15 @@
     </div>
     <div style="background:#0f1523;padding:10px;border-radius:8px;font-size:12px;">
       <strong style="color:var(--amber);">2. Codici Postali (CAP) Esteri se richiesti:</strong><br>
-      • 🇨🇭 Svizzera (RSI La2): <span class="zip-badge" onclick="copyText('6900')">6900 (Lugano)</span><br>
-      • 🇬🇧 Regno Unito (BBC/ITV): <span class="zip-badge" onclick="copyText('SW1A 1AA')">SW1A 1AA</span><br>
-      • 🇺🇸 USA (Tubi/Pluto): <span class="zip-badge" onclick="copyText('10001')">10001 (New York)</span><br>
-      • 🇦🇺 Australia (9Now/7plus): <span class="zip-badge" onclick="copyText('2000')">2000 (Sydney)</span>
+      • 🇨🇭 Svizzera (RSI La2): <button class="zip-badge" data-copy="6900">6900 (Lugano)</button><br>
+      • 🇬🇧 Regno Unito (BBC/ITV): <button class="zip-badge" data-copy="SW1A 1AA">SW1A 1AA</button><br>
+      • 🇺🇸 USA (Tubi/Pluto): <button class="zip-badge" data-copy="10001">10001 (New York)</button><br>
+      • 🇦🇺 Australia (9Now/7plus): <button class="zip-badge" data-copy="2000">2000 (Sydney)</button>
     </div>
   </div>
 </div>
+
+<div class="toast" id="toast" role="status"></div>
 
 <script>
 const DATA = [
@@ -149,6 +188,7 @@ const DATA = [
         lang: "Telecronaca in Italiano",
         vpn: "Server VPN: Svizzera (Zurigo o Lugano)",
         zip: "6900",
+        url: "https://www.rsi.ch/play/tv/live",
         steps: [
           "Attiva la VPN su un server in Svizzera.",
           "Apri Chrome in modalità Incognito e vai su rsi.ch/play/tv/live.",
@@ -163,6 +203,7 @@ const DATA = [
         lang: "Portoghese",
         vpn: "Server VPN: Brasile (San Paolo)",
         zip: "01000-000",
+        url: "https://www.youtube.com/@CazeTV",
         steps: [
           "Connetti la VPN al Brasile.",
           "Apri YouTube e cerca il canale ufficiale 'CazéTV' oppure vai su sbt.com.br.",
@@ -176,7 +217,8 @@ const DATA = [
         isFree: false,
         lang: "Italiano",
         vpn: "Nessuna VPN (Diretto dall'Italia)",
-        zip: "Non richiesto",
+        zip: null,
+        url: "https://www.tv8.it",
         steps: [
           "Il miglior match straniero del mercoledì è spesso in chiaro su TV8 (tv8.it).",
           "La miglior partita italiana del mercoledì è su Amazon Prime Video."
@@ -199,7 +241,8 @@ const DATA = [
         isFree: true,
         lang: "Portoghese",
         vpn: "Server VPN: Brasile",
-        zip: "Non richiesto",
+        zip: null,
+        url: "https://www.youtube.com/@CazeTV",
         steps: [
           "Imposta la VPN su Brasile.",
           "Apri YouTube e vai sul canale CazéTV nella scheda 'Dal Vivo' (Live).",
@@ -214,6 +257,7 @@ const DATA = [
         lang: "Inglese / Italiano (2° audio)",
         vpn: "Server VPN: USA (New York)",
         zip: "10001",
+        url: "https://www.paramountplus.com",
         steps: [
           "Tutte le 10 partite di Serie A a giornata incluse a 5,99$ al mese.",
           "Attiva VPN su USA, acquista una Gift Card Paramount+ USA online e riscattala con CAP 10001."
@@ -226,7 +270,8 @@ const DATA = [
         isFree: true,
         lang: "Italiano",
         vpn: "Nessuna VPN",
-        zip: "Non richiesto",
+        zip: null,
+        url: "https://mediasetinfinity.mediaset.it",
         steps: [
           "Tutte le partite di Coppa Italia sono trasmesse gratis in chiaro su Canale 5, Italia 1 e Mediaset Infinity."
         ]
@@ -249,6 +294,7 @@ const DATA = [
         lang: "Italiano",
         vpn: "Server VPN: Svizzera",
         zip: "6900",
+        url: "https://www.rsi.ch/play",
         steps: [
           "Attiva VPN su Svizzera e apri rsi.ch/play.",
           "Tutte le gare di F1 e MotoGP sono in diretta gratuita e commentate in italiano."
@@ -262,6 +308,7 @@ const DATA = [
         lang: "Tedesco",
         vpn: "Server VPN: Austria (Vienna)",
         zip: "1010",
+        url: "https://www.servustv.com",
         steps: [
           "Connetti la VPN all'Austria e vai su servustv.com.",
           "Streaming 1080p fluido e senza registrazione."
@@ -278,13 +325,14 @@ const DATA = [
     cheapBest: { name: "🇹🇷 Apple TV / YouTube Noleggio", price: "1,20€ (Noleggio)" },
     providers: [
       {
-        name: "🇺🇸 Tubi TV / Freevee",
+        name: "🇺🇸 Tubi TV",
         country: "Stati Uniti",
         price: "GRATIS",
         isFree: true,
         lang: "Inglese (Sottotitoli disponibili)",
         vpn: "Server VPN: USA (anche ProtonVPN Gratis)",
         zip: "10001",
+        url: "https://tubitv.com",
         steps: [
           "Attiva ProtonVPN (gratis) sul server USA.",
           "Apri tubitv.com dal browser in modalità Incognito.",
@@ -299,6 +347,7 @@ const DATA = [
         lang: "Italiano / Doppio Audio",
         vpn: "Server VPN: Svizzera",
         zip: "6900",
+        url: "https://www.rsi.ch/play",
         steps: [
           "Connetti la VPN alla Svizzera e apri la sezione Film di rsi.ch/play.",
           "Catalogo sempre aggiornato di film recenti in lingua italiana senza pubblicità."
@@ -322,6 +371,7 @@ const DATA = [
         lang: "Inglese (Sub ENG)",
         vpn: "Server VPN: Nuova Zelanda",
         zip: "1010",
+        url: "https://www.tvnz.co.nz",
         steps: [
           "TVNZ+ è la TV di stato neozelandese e offre decine di serie USA/UK complete gratis.",
           "Attiva VPN su Nuova Zelanda, registrati gratis su tvnz.co.nz con un'email qualsiasi."
@@ -334,7 +384,8 @@ const DATA = [
         isFree: false,
         lang: "Italiano",
         vpn: "Nessuna VPN",
-        zip: "Non richiesto",
+        zip: null,
+        url: "https://www.nowtv.it",
         steps: [
           "Accessibile direttamente dall'Italia su nowtv.it senza VPN."
         ]
@@ -343,138 +394,190 @@ const DATA = [
   }
 ];
 
+// Ricerca di un titolo qualsiasi direttamente sulle piattaforme
+const SEARCH_SITES = [
+  { name: "JustWatch Italia", note: "Dove si trova in Italia, gratis o a pagamento", url: q => "https://www.justwatch.com/it/cerca?q=" + q },
+  { name: "🇮🇹 RaiPlay", note: "Gratis, nessuna VPN", url: q => "https://www.raiplay.it/ricerca.html?q=" + q },
+  { name: "🇨🇭 Play RSI", note: "Gratis in italiano, VPN Svizzera", url: q => "https://www.rsi.ch/play/ricerca?query=" + q },
+  { name: "🇺🇸 Tubi TV", note: "Gratis, VPN USA", url: q => "https://tubitv.com/search/" + q },
+  { name: "▶️ YouTube", note: "Film gratis, noleggi e dirette", url: q => "https://www.youtube.com/results?search_query=" + q }
+];
+
 let currentFilter = 'ALL';
 
-function setFilter(f, btn) {
-  currentFilter = f;
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  render();
+const $ = id => document.getElementById(id);
+const searchInput = $('searchInput');
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-function toggleGuide(id) {
-  const el = document.getElementById(id);
-  if (el) el.classList.toggle('open');
+function norm(s) {
+  return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
 
-function toggleModal(show) {
-  const m = document.getElementById('vpnModal');
-  if (show) m.classList.add('open');
-  else m.classList.remove('open');
+function matches(item, q) {
+  if (!q) return true;
+  const hay = [item.title, item.sub, item.freeBest.name, item.cheapBest.name,
+    ...item.providers.flatMap(p => [p.name, p.country])].join(' ');
+  return norm(hay).includes(q);
 }
 
-function copyText(txt) {
-  if (navigator.clipboard) navigator.clipboard.writeText(txt);
-  alert("Codice CAP copiato: " + txt);
+function providerHtml(item, p, idx) {
+  const gId = 'guide_' + item.id + '_' + idx;
+  return `
+    <div class="prov-item">
+      <div class="prov-top">
+        <span class="prov-name">${esc(p.name)}</span>
+        <span class="price-tag ${p.isFree ? 'price-free' : 'price-paid'}">${esc(p.price)}</span>
+      </div>
+      <div class="prov-meta">🌍 ${esc(p.country)} • 🗣️ ${esc(p.lang)}</div>
+      <button class="btn-guide" data-guide="${gId}" aria-expanded="false" aria-controls="${gId}">
+        🔓 Come vederlo (Passaggi + VPN) <span class="arrow">▼</span>
+      </button>
+      <div id="${gId}" class="guide-box">
+        <div style="color:var(--green);font-weight:700;margin-bottom:4px;">🛡️ ${esc(p.vpn)}</div>
+        <ol class="step-list">
+          ${p.steps.map(s => `<li>${esc(s)}</li>`).join('')}
+        </ol>
+        ${p.zip ? `<div style="margin-top:6px;font-size:11px;color:var(--muted);">
+          CAP Estero consigliato: <button class="zip-badge" data-copy="${esc(p.zip)}">${esc(p.zip)} (Tocca per copiare)</button>
+        </div>` : ''}
+        ${p.url ? `<a class="btn-open" href="${esc(p.url)}" target="_blank" rel="noopener">Apri il sito ↗</a>` : ''}
+      </div>
+    </div>`;
 }
 
-function addCustomSearch() {
-  const q = document.getElementById('searchInput').value.trim();
-  if (!q) return;
-  const newItem = {
-    id: Date.now(),
-    title: q,
-    category: "FILM",
-    sub: "Ricerca Globale Instantanea",
-    freeBest: { name: "🇺🇸 Tubi TV / 🇨🇭 Play RSI / 🇮🇹 RaiPlay", price: "GRATIS (0€)" },
-    cheapBest: { name: " Apple TV / Prime Video (Noleggio)", price: "1,99€ - 3,99€" },
-    providers: [
-      {
-        name: "🇨🇭 Play RSI / 🇮🇹 RaiPlay / Mediaset",
-        country: "Svizzera / Italia",
-        price: "GRATIS",
-        isFree: true,
-        lang: "Italiano",
-        vpn: "Svizzera (per RSI) o Nessuna VPN (Italia)",
-        zip: "6900",
-        steps: [
-          "Controlla prima su RaiPlay.it e Mediaset Infinity senza VPN.",
-          "Per eventi sportivi o film in prima visione gratis in italiano, attiva VPN su Svizzera e cerca '" + q + "' su rsi.ch/play."
-        ]
-      },
-      {
-        name: "🇺🇸 Tubi TV / Pluto TV USA",
-        country: "Stati Uniti",
-        price: "GRATIS",
-        isFree: true,
-        lang: "Inglese",
-        vpn: "Server VPN: USA (ProtonVPN Gratis)",
-        zip: "10001",
-        steps: [
-          "Attiva ProtonVPN Free su server USA.",
-          "Vai su tubitv.com o pluto.tv in modalità Incognito e cerca '" + q + "'."
-        ]
-      }
-    ]
-  };
-  DATA.unshift(newItem);
-  render();
-}
-
-function render() {
-  const q = document.getElementById('searchInput').value.toLowerCase().trim();
-  const grid = document.getElementById('cardsGrid');
-
-  const filtered = DATA.filter(item => {
-    const matchText = item.title.toLowerCase().includes(q) || item.sub.toLowerCase().includes(q);
-    if (!matchText) return false;
-    if (currentFilter === 'ALL') return true;
-    if (currentFilter === 'FREE') return item.providers.some(p => p.isFree);
-    return item.category === currentFilter;
-  });
-
-  grid.innerHTML = filtered.map(item => `
-    <div class="card">
-      <div class="card-header">
-        <div>
-          <span class="badge-cat">${item.category}</span>
-          <div class="card-title">${item.title}</div>
-          <div class="card-sub">${item.sub}</div>
-        </div>
+function cardHtml(item) {
+  const providers = currentFilter === 'FREE' ? item.providers.filter(p => p.isFree) : item.providers;
+  return `
+    <article class="card">
+      <div>
+        <span class="badge-cat">${esc(item.category)}</span>
+        <div class="card-title">${esc(item.title)}</div>
+        <div class="card-sub">${esc(item.sub)}</div>
       </div>
 
       <div class="highlights">
         <div class="hl-free">
           <div class="hl-label">🔥 Migliore GRATIS</div>
-          <div class="hl-plat">${item.freeBest.name}</div>
-          <div class="hl-price" style="color:var(--green)">${item.freeBest.price}</div>
+          <div class="hl-plat">${esc(item.freeBest.name)}</div>
+          <div class="hl-price">${esc(item.freeBest.price)}</div>
         </div>
         <div class="hl-cheap">
           <div class="hl-label">💸 Prezzo Più Basso</div>
-          <div class="hl-plat">${item.cheapBest.name}</div>
-          <div class="hl-price" style="color:var(--amber)">${item.cheapBest.price}</div>
+          <div class="hl-plat">${esc(item.cheapBest.name)}</div>
+          <div class="hl-price">${esc(item.cheapBest.price)}</div>
         </div>
       </div>
 
       <div class="prov-list">
-        ${item.providers.map((p, idx) => {
-          const gId = 'guide_' + item.id + '_' + idx;
-          return `
-            <div class="prov-item">
-              <div class="prov-top">
-                <span class="prov-name">${p.name}</span>
-                <span class="price-tag ${p.isFree ? 'price-free' : 'price-paid'}">${p.price}</span>
-              </div>
-              <div class="prov-meta">🌍 ${p.country} • 🗣️ ${p.lang}</div>
-              <button class="btn-guide" onclick="toggleGuide('${gId}')">
-                🔓 Come vederlo (Passaggi + VPN) ▼
-              </button>
-              <div id="${gId}" class="guide-box">
-                <div style="color:var(--green);font-weight:700;margin-bottom:4px;">🛡️ ${p.vpn}</div>
-                <ol class="step-list">
-                  ${p.steps.map(s => `<li>${s}</li>`).join('')}
-                </ol>
-                <div style="margin-top:6px;font-size:11px;color:var(--muted);">
-                  CAP Estero consigliato: <span class="zip-badge" onclick="copyText('${p.zip}')">${p.zip} (Tocca per copiare)</span>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('')}
+        ${providers.map((p, idx) => providerHtml(item, p, idx)).join('')}
       </div>
-    </div>
-  `).join('');
+    </article>`;
 }
+
+function globalSearchHtml(raw) {
+  const q = encodeURIComponent(raw);
+  return `
+    <h2>🔎 Cerca "${esc(raw)}" ovunque</h2>
+    <p>Apre la ricerca direttamente sulle piattaforme. Per quelle estere attiva prima la VPN sul Paese indicato.</p>
+    <div class="links">
+      ${SEARCH_SITES.map(s => `
+        <a href="${esc(s.url(q))}" target="_blank" rel="noopener">${esc(s.name)} ↗<small>${esc(s.note)}</small></a>
+      `).join('')}
+    </div>`;
+}
+
+function render() {
+  const raw = searchInput.value.trim();
+  const q = norm(raw);
+
+  const filtered = DATA.filter(item => {
+    if (!matches(item, q)) return false;
+    if (currentFilter === 'ALL') return true;
+    if (currentFilter === 'FREE') return item.providers.some(p => p.isFree);
+    return item.category === currentFilter;
+  });
+
+  $('cardsGrid').innerHTML = filtered.length
+    ? filtered.map(cardHtml).join('')
+    : `<div class="empty">Nessun risultato nella guida${raw ? ` per "${esc(raw)}"` : ''}.${raw ? '<br>Prova la ricerca sulle piattaforme qui sotto 👇' : ''}</div>`;
+  $('count').textContent = !filtered.length ? '' : filtered.length + (filtered.length === 1 ? ' risultato' : ' risultati');
+
+  const global = $('globalSearch');
+  global.hidden = !raw;
+  if (raw) global.innerHTML = globalSearchHtml(raw);
+  $('clearBtn').classList.toggle('show', !!raw);
+}
+
+function toggleModal(show) {
+  $('vpnModal').classList.toggle('open', show);
+  document.body.style.overflow = show ? 'hidden' : '';
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+async function copyText(txt) {
+  try {
+    await navigator.clipboard.writeText(txt);
+  } catch {
+    const ta = document.createElement('textarea');
+    ta.value = txt;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+  }
+  toast('📋 CAP copiato: ' + txt);
+}
+
+searchInput.addEventListener('input', render);
+
+$('searchForm').addEventListener('submit', e => {
+  e.preventDefault();
+  render();
+  if (searchInput.value.trim()) $('globalSearch').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+$('clearBtn').addEventListener('click', () => {
+  searchInput.value = '';
+  render();
+  searchInput.focus();
+});
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-filter], [data-guide], [data-copy], [data-action]');
+  if (!el) {
+    if (e.target.id === 'vpnModal') toggleModal(false);
+    return;
+  }
+  if (el.dataset.filter) {
+    currentFilter = el.dataset.filter;
+    document.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c === el));
+    render();
+  } else if (el.dataset.guide) {
+    const open = $(el.dataset.guide).classList.toggle('open');
+    el.setAttribute('aria-expanded', open);
+  } else if (el.dataset.copy) {
+    copyText(el.dataset.copy);
+  } else if (el.dataset.action === 'modal-open') {
+    toggleModal(true);
+  } else if (el.dataset.action === 'modal-close') {
+    toggleModal(false);
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') toggleModal(false);
+});
 
 render();
 </script>
