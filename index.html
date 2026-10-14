@@ -137,7 +137,7 @@
 </main>
 
 <footer>
-  Informazioni indicative: prezzi, cataloghi e diritti TV cambiano spesso, verifica sempre sul sito ufficiale.
+  Dati verificati a ottobre 2026 e indicativi: prezzi, cataloghi e diritti TV cambiano spesso, verifica sempre sul sito ufficiale.
   L'uso di una VPN per accedere a contenuti di un altro Paese può violare i termini di servizio delle piattaforme.
 </footer>
 
@@ -176,10 +176,25 @@ const DATA = [
     id: 1,
     title: "Champions League & Big Match Europei",
     category: "SPORT",
-    sub: "Calcio Live • Martedì e Mercoledì",
-    freeBest: { name: "🇨🇭 RSI La 2 (Svizzera) / 🇮🇪 Virgin Media", price: "GRATIS (0€)" },
-    cheapBest: { name: "🇷🇴 Digi Sport / 🇧🇷 Max Brasile", price: "4,50€ / mese" },
+    sub: "Calcio Live • Martedì e Mercoledì • Stagione 2026/27",
+    freeBest: { name: "🇮🇹 TV8 / 🇨🇭 RSI La 2 / 🇮🇪 Virgin Media", price: "GRATIS (0€)" },
+    cheapBest: { name: "🇮🇹 Prime Video (big match del mercoledì)", price: "4,99€ / mese" },
     providers: [
+      {
+        name: "🇮🇹 TV8 / Prime Video / Sky-NOW",
+        country: "Italia",
+        price: "TV8 gratis / da 4,99€",
+        isFree: true,
+        lang: "Italiano",
+        vpn: "Nessuna VPN (Diretto dall'Italia)",
+        zip: null,
+        url: "https://www.tv8.it",
+        steps: [
+          "Su TV8 (gratis, in chiaro) va il miglior match tra squadre straniere di ogni turno, non quelli delle italiane.",
+          "La miglior partita di un'italiana del mercoledì è su Amazon Prime Video (18 partite a stagione).",
+          "Tutte le altre, finale compresa, sono su Sky e NOW (Pass Sport da 19,99€/mese con vincolo di 12 mesi, 29,99€ senza)."
+        ]
+      },
       {
         name: "🇨🇭 Play RSI (RSI La 2)",
         country: "Svizzera Italiana",
@@ -192,36 +207,38 @@ const DATA = [
         steps: [
           "Attiva la VPN su un server in Svizzera.",
           "Apri Chrome in modalità Incognito e vai su rsi.ch/play/tv/live.",
-          "Seleziona RSI La 2: parte subito senza registrazione e con commento in italiano!"
+          "RSI trasmette 1 partita per turno più la finale (17 in tutto), di solito su RSI La 2, con commento in italiano e senza registrazione."
         ]
       },
       {
-        name: "🇧🇷 CazéTV (YouTube) / SBT",
+        name: "🇮🇪 Virgin Media Two / RTÉ 2",
+        country: "Irlanda",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Inglese",
+        vpn: "Server VPN: Irlanda (Dublino)",
+        zip: null,
+        url: "https://www.virginmediatelevision.ie",
+        steps: [
+          "Connetti la VPN all'Irlanda.",
+          "Virgin Media Play trasmette fino a 6 partite a settimana, RTÉ Player altre 2: serve un account gratuito.",
+          "Virgin Media perde i diritti dopo la finale di maggio 2027."
+        ]
+      },
+      {
+        name: "🇧🇷 SBT / TNT Sports (YouTube)",
         country: "Brasile",
         price: "GRATIS",
         isFree: true,
         lang: "Portoghese",
         vpn: "Server VPN: Brasile (San Paolo)",
         zip: "01000-000",
-        url: "https://www.youtube.com/@CazeTV",
+        url: "https://www.youtube.com/@TNTSportsBR",
         steps: [
           "Connetti la VPN al Brasile.",
-          "Apri YouTube e cerca il canale ufficiale 'CazéTV' oppure vai su sbt.com.br.",
-          "Guarda la diretta gratuitamente in Full HD."
-        ]
-      },
-      {
-        name: "🇮🇹 TV8 / Prime Video / Sky NOW",
-        country: "Italia",
-        price: "Gratis (1 match) / 14,99€",
-        isFree: false,
-        lang: "Italiano",
-        vpn: "Nessuna VPN (Diretto dall'Italia)",
-        zip: null,
-        url: "https://www.tv8.it",
-        steps: [
-          "Il miglior match straniero del mercoledì è spesso in chiaro su TV8 (tv8.it).",
-          "La miglior partita italiana del mercoledì è su Amazon Prime Video."
+          "SBT trasmette almeno una partita per turno in chiaro, anche in streaming su +SBT (sbt.com.br).",
+          "TNT Sports mette 31 partite della stagione gratis sul suo canale YouTube.",
+          "Tutte le partite sono su HBO Max Brasile (piano base circa R$30 al mese, circa 5€)."
         ]
       }
     ]
@@ -230,10 +247,23 @@ const DATA = [
     id: 2,
     title: "Serie A, Coppa Italia & Campionati Top",
     category: "SPORT",
-    sub: "Calcio Live • Weekend",
-    freeBest: { name: "🇺🇸 Golazo Network / 🇧🇷 CazéTV", price: "GRATIS (0€)" },
-    cheapBest: { name: "🇺🇸 Paramount+ USA", price: "5,50€ / mese" },
+    sub: "Calcio Live • Weekend • Stagione 2026/27",
+    freeBest: { name: "🇮🇹 Mediaset (Coppa Italia) / 🇧🇷 CazéTV / 🇺🇸 Golazo", price: "GRATIS (0€)" },
+    cheapBest: { name: "🇺🇸 Paramount+ USA (tutte le 380 partite)", price: "8,99$ / mese" },
     providers: [
+      {
+        name: "🇮🇹 Mediaset Infinity (Coppa Italia)",
+        country: "Italia",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Italiano",
+        vpn: "Nessuna VPN",
+        zip: null,
+        url: "https://mediasetinfinity.mediaset.it",
+        steps: [
+          "Tutte le partite di Coppa Italia 2026/27 sono in esclusiva e gratis su Italia 1, Canale 5 e Canale 20, e in streaming su Mediaset Infinity."
+        ]
+      },
       {
         name: "🇧🇷 CazéTV (YouTube Brasile)",
         country: "Brasile",
@@ -246,34 +276,35 @@ const DATA = [
         steps: [
           "Imposta la VPN su Brasile.",
           "Apri YouTube e vai sul canale CazéTV nella scheda 'Dal Vivo' (Live).",
-          "Trasmette gratuitamente diversi match di Serie A, Ligue 1 e Bundesliga."
+          "Trasmette gratis una selezione di partite di Serie A, Premier League, LaLiga, Bundesliga e Ligue 1."
+        ]
+      },
+      {
+        name: "🇺🇸 CBS Sports Golazo Network",
+        country: "Stati Uniti",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Inglese",
+        vpn: "Server VPN: USA",
+        zip: "10001",
+        url: "https://pluto.tv",
+        steps: [
+          "Attiva la VPN su USA e apri pluto.tv in modalità Incognito.",
+          "Cerca il canale CBS Sports Golazo Network: trasmette gratis alcune partite di Serie A durante la stagione."
         ]
       },
       {
         name: "🇺🇸 Paramount+ USA",
         country: "Stati Uniti",
-        price: "5,50€ / mese",
+        price: "8,99$ / mese",
         isFree: false,
-        lang: "Inglese / Italiano (2° audio)",
+        lang: "Inglese",
         vpn: "Server VPN: USA (New York)",
         zip: "10001",
         url: "https://www.paramountplus.com",
         steps: [
-          "Tutte le 10 partite di Serie A a giornata incluse a 5,99$ al mese.",
+          "Tutte le 380 partite di Serie A 2026/27, più Coppa Italia e Supercoppa, sono incluse anche nel piano Essential (8,99$ al mese).",
           "Attiva VPN su USA, acquista una Gift Card Paramount+ USA online e riscattala con CAP 10001."
-        ]
-      },
-      {
-        name: "🇮🇹 Mediaset Infinity (Coppa Italia)",
-        country: "Italia",
-        price: "GRATIS",
-        isFree: true,
-        lang: "Italiano",
-        vpn: "Nessuna VPN",
-        zip: null,
-        url: "https://mediasetinfinity.mediaset.it",
-        steps: [
-          "Tutte le partite di Coppa Italia sono trasmesse gratis in chiaro su Canale 5, Italia 1 e Mediaset Infinity."
         ]
       }
     ]
@@ -282,12 +313,12 @@ const DATA = [
     id: 3,
     title: "Formula 1 & MotoGP (Tutte le Gare Live)",
     category: "SPORT",
-    sub: "Motori • Diretta Gran Premi",
-    freeBest: { name: "🇨🇭 RSI La 2 / 🇦🇹 ServusTV / 🇱🇺 RTL Zwee", price: "GRATIS (0€)" },
-    cheapBest: { name: "🇮🇳 Fancode / F1 TV Pro", price: "3,90€ / mese" },
+    sub: "Motori • Diretta Gran Premi • Stagione 2026",
+    freeBest: { name: "🇨🇭 RSI / 🇦🇹 ServusTV-ORF / 🇱🇺 RTL Zwee", price: "GRATIS (0€)" },
+    cheapBest: { name: "🇮🇳 FanCode F1 Season Pass", price: "₹799 / stagione (~8€)" },
     providers: [
       {
-        name: "🇨🇭 RSI La 2 (Svizzera)",
+        name: "🇨🇭 Play RSI (Svizzera)",
         country: "Svizzera",
         price: "GRATIS",
         isFree: true,
@@ -297,11 +328,11 @@ const DATA = [
         url: "https://www.rsi.ch/play",
         steps: [
           "Attiva VPN su Svizzera e apri rsi.ch/play.",
-          "Tutte le gare di F1 e MotoGP sono in diretta gratuita e commentate in italiano."
+          "La SSR (RSI, SRF e RTS) ha i diritti di F1 e MotoGP anche per il 2026: gare in diretta gratuita, su RSI con commento in italiano."
         ]
       },
       {
-        name: "🇦🇹 ServusTV On / ORF",
+        name: "🇦🇹 ServusTV On / ORF ON",
         country: "Austria",
         price: "GRATIS",
         isFree: true,
@@ -310,20 +341,62 @@ const DATA = [
         zip: "1010",
         url: "https://www.servustv.com",
         steps: [
-          "Connetti la VPN all'Austria e vai su servustv.com.",
-          "Streaming 1080p fluido e senza registrazione."
+          "Connetti la VPN all'Austria.",
+          "Ogni GP di F1 2026 è in chiaro: metà su ServusTV (servustv.com), metà su ORF 1 (on.orf.at)."
+        ]
+      },
+      {
+        name: "🇱🇺 RTL Zwee",
+        country: "Lussemburgo",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Lussemburghese / Francese",
+        vpn: "Server VPN: Lussemburgo",
+        zip: null,
+        url: "https://www.rtl.lu",
+        steps: [
+          "Connetti la VPN al Lussemburgo e apri rtl.lu.",
+          "RTL Zwee trasmette in chiaro tutte le gare e le sessioni di F1."
+        ]
+      },
+      {
+        name: "🇮🇳 FanCode / F1 TV Pro India",
+        country: "India",
+        price: "da ₹99 a GP",
+        isFree: false,
+        lang: "Inglese",
+        vpn: "Server VPN: India (Mumbai)",
+        zip: null,
+        url: "https://www.fancode.com",
+        steps: [
+          "FanCode: ₹99 per un singolo weekend di gara, ₹799 per tutta la stagione 2026.",
+          "In alternativa F1 TV Pro dall'India costa 3,99$ al mese o 29,99$ l'anno.",
+          "Serve un metodo di pagamento che accetti rupie, oppure una gift card."
         ]
       }
     ]
   },
   {
     id: 4,
-    title: "Dune: Parte Due / Oppenheimer / Top Film Cinema",
+    title: "Film di Hollywood Gratis (Tubi, Pluto TV, RSI)",
     category: "FILM",
-    sub: "Film Blockbuster • 4K & HD",
-    freeBest: { name: "🇺🇸 Tubi TV / Pluto TV / 🇨🇭 Play RSI", price: "GRATIS (con spot)" },
-    cheapBest: { name: "🇹🇷 Apple TV / YouTube Noleggio", price: "1,20€ (Noleggio)" },
+    sub: "Film Blockbuster • Gratis con pubblicità o a noleggio",
+    freeBest: { name: "🇮🇹 Pluto TV / 🇺🇸 Tubi TV / 🇨🇭 Play RSI", price: "GRATIS (con spot)" },
+    cheapBest: { name: "Noleggio digitale (Prime Video, Apple TV, Google TV)", price: "da ~3,99€" },
     providers: [
+      {
+        name: "🇮🇹 Pluto TV Italia",
+        country: "Italia",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Italiano",
+        vpn: "Nessuna VPN",
+        zip: null,
+        url: "https://pluto.tv/it",
+        steps: [
+          "Disponibile in Italia senza VPN e senza registrazione: canali tematici e film on demand gratis con pubblicità."
+        ]
+      },
       {
         name: "🇺🇸 Tubi TV",
         country: "Stati Uniti",
@@ -336,7 +409,7 @@ const DATA = [
         steps: [
           "Attiva ProtonVPN (gratis) sul server USA.",
           "Apri tubitv.com dal browser in modalità Incognito.",
-          "Premi Play: migliaia di film di Hollywood partono gratis senza carta di credito."
+          "Catalogo enorme gratis con pubblicità, senza carta di credito. I grandi titoli ruotano ogni mese: ad esempio Dune - Parte Uno è arrivato a febbraio 2026, Parte Due no."
         ]
       },
       {
@@ -350,7 +423,7 @@ const DATA = [
         url: "https://www.rsi.ch/play",
         steps: [
           "Connetti la VPN alla Svizzera e apri la sezione Film di rsi.ch/play.",
-          "Catalogo sempre aggiornato di film recenti in lingua italiana senza pubblicità."
+          "Film in italiano gratis, ma ognuno resta disponibile solo per un periodo limitato."
         ]
       }
     ]
@@ -360,34 +433,35 @@ const DATA = [
     title: "The Last of Us / House of the Dragon / Serie HBO",
     category: "SERIE",
     sub: "Serie TV Cult • Tutte le stagioni",
-    freeBest: { name: "🇦🇺 9Now / 🇬🇧 BBC iPlayer / TVNZ+", price: "GRATIS (Sez. Free)" },
-    cheapBest: { name: "🇧🇷 Max / 🇵🇱 Player.pl", price: "3,80€ / mese" },
+    freeBest: { name: "Nessuna fonte gratis affidabile", price: "—" },
+    cheapBest: { name: "🇮🇹 HBO Max Italia (Base con pubblicità)", price: "5,99€ / mese" },
     providers: [
       {
-        name: "🇳🇿 TVNZ+ (Nuova Zelanda)",
-        country: "Nuova Zelanda",
-        price: "GRATIS",
-        isFree: true,
-        lang: "Inglese (Sub ENG)",
-        vpn: "Server VPN: Nuova Zelanda",
-        zip: "1010",
-        url: "https://www.tvnz.co.nz",
+        name: "🇮🇹 HBO Max Italia",
+        country: "Italia",
+        price: "da 5,99€ / mese",
+        isFree: false,
+        lang: "Italiano",
+        vpn: "Nessuna VPN",
+        zip: null,
+        url: "https://www.hbomax.com",
         steps: [
-          "TVNZ+ è la TV di stato neozelandese e offre decine di serie USA/UK complete gratis.",
-          "Attiva VPN su Nuova Zelanda, registrati gratis su tvnz.co.nz con un'email qualsiasi."
+          "Dal 13 gennaio 2026 HBO Max è disponibile in Italia: è lì che trovi tutto il catalogo HBO.",
+          "Base con pubblicità 5,99€, Standard 11,99€, Premium 4K 16,99€ al mese."
         ]
       },
       {
         name: "🇮🇹 NOW Entertainment / Sky",
         country: "Italia",
-        price: "6,99€ / mese",
+        price: "8,99€ / mese",
         isFree: false,
         lang: "Italiano",
         vpn: "Nessuna VPN",
         zip: null,
         url: "https://www.nowtv.it",
         steps: [
-          "Accessibile direttamente dall'Italia su nowtv.it senza VPN."
+          "Con l'arrivo di HBO Max, Sky e NOW hanno perso molte serie HBO, ma The Last of Us è rimasta anche lì.",
+          "Pass Entertainment 8,99€ al mese senza vincoli, oppure 4,99€ con vincolo di 12 mesi."
         ]
       }
     ]
