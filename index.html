@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>StreamFinder Global - Gratis & Prezzo Più Basso</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #151c2c;
+      --card-border: #263147;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --green: #10b981;
+      --green-bg: rgba(16, 185, 129, 0.12);
+      --amber: #f59e0b;
+      --amber-bg: rgba(245, 158, 11, 0.12);
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 60px; line-height: 1.45; }
+    header { background: #111827; border-bottom: 1px solid var(--card-border); padding: 14px 16px; position: sticky; top: 0; z-index: 50; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 900px; margin: 0 auto; }
+    .logo { font-size: 19px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .logo span { color: var(--green); }
+    .btn-vpn-hub { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .container { max-width: 900px; margin: 0 auto; padding: 16px; }
+
+    /* Search & Filters */
+    .search-box { display: flex; gap: 8px; margin-bottom: 14px; }
+    .search-input { flex: 1; background: var(--card); border: 1px solid var(--card-border); color: #fff; padding: 12px 14px; border-radius: 10px; font-size: 15px; outline: none; }
+    .search-input:focus { border-color: var(--green); }
+    .btn-search { background: var(--indigo); color: #fff; border: none; padding: 0 16px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; }
+
+    .filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 14px; }
+    .chip { background: var(--card); color: var(--muted); border: 1px solid var(--card-border); padding: 7px 13px; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; }
+    .chip.active { background: var(--green); color: #042f2e; border-color: var(--green); font-weight: 800; }
+
+    /* Cards */
+    .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 680px) { .grid { grid-template-columns: 1fr 1fr; } }
+    .card { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .badge-cat { font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: #1e293b; color: #38bdf8; }
+    .card-title { font-size: 18px; font-weight: 800; margin-top: 4px; }
+    .card-sub { font-size: 12px; color: var(--muted); }
+
+    /* Highlight Boxes */
+    .highlights { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .hl-free { background: var(--green-bg); border: 1px solid rgba(16,185,129,0.4); border-radius: 10px; padding: 10px; }
+    .hl-cheap { background: var(--amber-bg); border: 1px solid rgba(245,158,11,0.4); border-radius: 10px; padding: 10px; }
+    .hl-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; }
+    .hl-free .hl-label { color: var(--green); }
+    .hl-cheap .hl-label { color: var(--amber); }
+    .hl-plat { font-size: 14px; font-weight: 800; margin: 3px 0; color: #fff; }
+    .hl-price { font-size: 12px; font-weight: 700; }
+
+    /* Provider List inside card */
+    .prov-list { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--card-border); padding-top: 10px; }
+    .prov-item { background: #0f1523; border: 1px solid #1e293b; border-radius: 10px; padding: 10px; }
+    .prov-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+    .prov-name { font-weight: 700; font-size: 14px; }
+    .prov-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .price-tag { font-weight: 800; font-size: 13px; padding: 3px 8px; border-radius: 6px; }
+    .price-free { background: var(--green); color: #022c22; }
+    .price-paid { background: #1e293b; color: #f8fafc; }
+
+    .btn-guide { width: 100%; margin-top: 8px; background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; text-align: center; }
+    .guide-box { display: none; margin-top: 8px; background: #090d16; border: 1px solid #334155; border-radius: 8px; padding: 10px; font-size: 12px; }
+    .guide-box.open { display: block; }
+    .step-list { padding-left: 16px; margin: 6px 0; color: #cbd5e1; }
+    .step-list li { margin-bottom: 4px; }
+    .zip-badge { display: inline-block; background: #1e293b; color: var(--amber); padding: 2px 7px; border-radius: 4px; font-family: monospace; font-weight: 700; margin-top: 4px; cursor: pointer; }
+
+    /* Modal VPN */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 100; padding: 16px; overflow-y: auto; }
+    .modal.open { display: flex; align-items: center; justify-content: center; }
+    .modal-content { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; max-width: 550px; width: 100%; padding: 18px; max-height: 90vh; overflow-y: auto; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo">🌍 Stream<span>Finder</span></div>
+    <button class="btn-vpn-hub" onclick="toggleModal(true)">🔐 Guida VPN & CAP</button>
+  </div>
+</header>
+
+<div class="container">
+  <div class="search-box">
+    <input type="text" id="searchInput" class="search-input" placeholder="Cerca film, serie o partita (es. Inter, Dune, UFC)..." oninput="render()">
+    <button class="btn-search" onclick="addCustomSearch()">+ Cerca</button>
+  </div>
+
+  <div class="filters">
+    <button class="chip active" onclick="setFilter('ALL', this)">Tutti</button>
+    <button class="chip" onclick="setFilter('FREE', this)">🔥 Solo GRATIS (0€)</button>
+    <button class="chip" onclick="setFilter('SPORT', this)">⚽ Partite & Sport</button>
+    <button class="chip" onclick="setFilter('FILM', this)">🎬 Film</button>
+    <button class="chip" onclick="setFilter('SERIE', this)">📺 Serie TV</button>
+  </div>
+
+  <div id="cardsGrid" class="grid"></div>
+</div>
+
+<!-- Modal Guida Generale VPN -->
+<div id="vpnModal" class="modal" onclick="if(event.target===this) toggleModal(false)">
+  <div class="modal-content">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <h3 style="font-size:17px;">🔐 Come vedere i canali esteri su Android, TV e PC</h3>
+      <button onclick="toggleModal(false)" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;">✕</button>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">
+      Molte emittenti mondiali trasmettono <strong>legalmente e gratis</strong> partite, film e serie TV, ma bloccano gli IP fuori dal loro Paese. Ecco come sbloccarle:
+    </p>
+    <div style="background:#0f1523;padding:10px;border-radius:8px;margin-bottom:10px;font-size:12px;">
+      <strong style="color:var(--green);">1. Su Smartphone Android / Google TV:</strong>
+      <ul class="step-list">
+        <li>Installa una VPN affidabile (Gratis: <strong>ProtonVPN</strong> o <strong>Windscribe</strong> per USA/Olanda; Premium consigliate per Svizzera/UK: <strong>NordVPN</strong> o <strong>Surfshark</strong>).</li>
+        <li><strong>IMPORTANTE su Android:</strong> spegni il <strong>GPS / Posizione</strong> dal menu a tendina e apri il sito dal browser Chrome in <strong>Modalità Incognito</strong> (le app ufficiali leggono il GPS del telefono).</li>
+      </ul>
+    </div>
+    <div style="background:#0f1523;padding:10px;border-radius:8px;font-size:12px;">
+      <strong style="color:var(--amber);">2. Codici Postali (CAP) Esteri se richiesti:</strong><br>
+      • 🇨🇭 Svizzera (RSI La2): <span class="zip-badge" onclick="copyText('6900')">6900 (Lugano)</span><br>
+      • 🇬🇧 Regno Unito (BBC/ITV): <span class="zip-badge" onclick="copyText('SW1A 1AA')">SW1A 1AA</span><br>
+      • 🇺🇸 USA (Tubi/Pluto): <span class="zip-badge" onclick="copyText('10001')">10001 (New York)</span><br>
+      • 🇦🇺 Australia (9Now/7plus): <span class="zip-badge" onclick="copyText('2000')">2000 (Sydney)</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = [
+  {
+    id: 1,
+    title: "Champions League & Big Match Europei",
+    category: "SPORT",
+    sub: "Calcio Live • Martedì e Mercoledì",
+    freeBest: { name: "🇨🇭 RSI La 2 (Svizzera) / 🇮🇪 Virgin Media", price: "GRATIS (0€)" },
+    cheapBest: { name: "🇷🇴 Digi Sport / 🇧🇷 Max Brasile", price: "4,50€ / mese" },
+    providers: [
+      {
+        name: "🇨🇭 Play RSI (RSI La 2)",
+        country: "Svizzera Italiana",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Telecronaca in Italiano",
+        vpn: "Server VPN: Svizzera (Zurigo o Lugano)",
+        zip: "6900",
+        steps: [
+          "Attiva la VPN su un server in Svizzera.",
+          "Apri Chrome in modalità Incognito e vai su rsi.ch/play/tv/live.",
+          "Seleziona RSI La 2: parte subito senza registrazione e con commento in italiano!"
+        ]
+      },
+      {
+        name: "🇧🇷 CazéTV (YouTube) / SBT",
+        country: "Brasile",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Portoghese",
+        vpn: "Server VPN: Brasile (San Paolo)",
+        zip: "01000-000",
+        steps: [
+          "Connetti la VPN al Brasile.",
+          "Apri YouTube e cerca il canale ufficiale 'CazéTV' oppure vai su sbt.com.br.",
+          "Guarda la diretta gratuitamente in Full HD."
+        ]
+      },
+      {
+        name: "🇮🇹 TV8 / Prime Video / Sky NOW",
+        country: "Italia",
+        price: "Gratis (1 match) / 14,99€",
+        isFree: false,
+        lang: "Italiano",
+        vpn: "Nessuna VPN (Diretto dall'Italia)",
+        zip: "Non richiesto",
+        steps: [
+          "Il miglior match straniero del mercoledì è spesso in chiaro su TV8 (tv8.it).",
+          "La miglior partita italiana del mercoledì è su Amazon Prime Video."
+        ]
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: "Serie A, Coppa Italia & Campionati Top",
+    category: "SPORT",
+    sub: "Calcio Live • Weekend",
+    freeBest: { name: "🇺🇸 Golazo Network / 🇧🇷 CazéTV", price: "GRATIS (0€)" },
+    cheapBest: { name: "🇺🇸 Paramount+ USA", price: "5,50€ / mese" },
+    providers: [
+      {
+        name: "🇧🇷 CazéTV (YouTube Brasile)",
+        country: "Brasile",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Portoghese",
+        vpn: "Server VPN: Brasile",
+        zip: "Non richiesto",
+        steps: [
+          "Imposta la VPN su Brasile.",
+          "Apri YouTube e vai sul canale CazéTV nella scheda 'Dal Vivo' (Live).",
+          "Trasmette gratuitamente diversi match di Serie A, Ligue 1 e Bundesliga."
+        ]
+      },
+      {
+        name: "🇺🇸 Paramount+ USA",
+        country: "Stati Uniti",
+        price: "5,50€ / mese",
+        isFree: false,
+        lang: "Inglese / Italiano (2° audio)",
+        vpn: "Server VPN: USA (New York)",
+        zip: "10001",
+        steps: [
+          "Tutte le 10 partite di Serie A a giornata incluse a 5,99$ al mese.",
+          "Attiva VPN su USA, acquista una Gift Card Paramount+ USA online e riscattala con CAP 10001."
+        ]
+      },
+      {
+        name: "🇮🇹 Mediaset Infinity (Coppa Italia)",
+        country: "Italia",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Italiano",
+        vpn: "Nessuna VPN",
+        zip: "Non richiesto",
+        steps: [
+          "Tutte le partite di Coppa Italia sono trasmesse gratis in chiaro su Canale 5, Italia 1 e Mediaset Infinity."
+        ]
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: "Formula 1 & MotoGP (Tutte le Gare Live)",
+    category: "SPORT",
+    sub: "Motori • Diretta Gran Premi",
+    freeBest: { name: "🇨🇭 RSI La 2 / 🇦🇹 ServusTV / 🇱🇺 RTL Zwee", price: "GRATIS (0€)" },
+    cheapBest: { name: "🇮🇳 Fancode / F1 TV Pro", price: "3,90€ / mese" },
+    providers: [
+      {
+        name: "🇨🇭 RSI La 2 (Svizzera)",
+        country: "Svizzera",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Italiano",
+        vpn: "Server VPN: Svizzera",
+        zip: "6900",
+        steps: [
+          "Attiva VPN su Svizzera e apri rsi.ch/play.",
+          "Tutte le gare di F1 e MotoGP sono in diretta gratuita e commentate in italiano."
+        ]
+      },
+      {
+        name: "🇦🇹 ServusTV On / ORF",
+        country: "Austria",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Tedesco",
+        vpn: "Server VPN: Austria (Vienna)",
+        zip: "1010",
+        steps: [
+          "Connetti la VPN all'Austria e vai su servustv.com.",
+          "Streaming 1080p fluido e senza registrazione."
+        ]
+      }
+    ]
+  },
+  {
+    id: 4,
+    title: "Dune: Parte Due / Oppenheimer / Top Film Cinema",
+    category: "FILM",
+    sub: "Film Blockbuster • 4K & HD",
+    freeBest: { name: "🇺🇸 Tubi TV / Pluto TV / 🇨🇭 Play RSI", price: "GRATIS (con spot)" },
+    cheapBest: { name: "🇹🇷 Apple TV / YouTube Noleggio", price: "1,20€ (Noleggio)" },
+    providers: [
+      {
+        name: "🇺🇸 Tubi TV / Freevee",
+        country: "Stati Uniti",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Inglese (Sottotitoli disponibili)",
+        vpn: "Server VPN: USA (anche ProtonVPN Gratis)",
+        zip: "10001",
+        steps: [
+          "Attiva ProtonVPN (gratis) sul server USA.",
+          "Apri tubitv.com dal browser in modalità Incognito.",
+          "Premi Play: migliaia di film di Hollywood partono gratis senza carta di credito."
+        ]
+      },
+      {
+        name: "🇨🇭 Play RSI Film",
+        country: "Svizzera",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Italiano / Doppio Audio",
+        vpn: "Server VPN: Svizzera",
+        zip: "6900",
+        steps: [
+          "Connetti la VPN alla Svizzera e apri la sezione Film di rsi.ch/play.",
+          "Catalogo sempre aggiornato di film recenti in lingua italiana senza pubblicità."
+        ]
+      }
+    ]
+  },
+  {
+    id: 5,
+    title: "The Last of Us / House of the Dragon / Serie HBO",
+    category: "SERIE",
+    sub: "Serie TV Cult • Tutte le stagioni",
+    freeBest: { name: "🇦🇺 9Now / 🇬🇧 BBC iPlayer / TVNZ+", price: "GRATIS (Sez. Free)" },
+    cheapBest: { name: "🇧🇷 Max / 🇵🇱 Player.pl", price: "3,80€ / mese" },
+    providers: [
+      {
+        name: "🇳🇿 TVNZ+ (Nuova Zelanda)",
+        country: "Nuova Zelanda",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Inglese (Sub ENG)",
+        vpn: "Server VPN: Nuova Zelanda",
+        zip: "1010",
+        steps: [
+          "TVNZ+ è la TV di stato neozelandese e offre decine di serie USA/UK complete gratis.",
+          "Attiva VPN su Nuova Zelanda, registrati gratis su tvnz.co.nz con un'email qualsiasi."
+        ]
+      },
+      {
+        name: "🇮🇹 NOW Entertainment / Sky",
+        country: "Italia",
+        price: "6,99€ / mese",
+        isFree: false,
+        lang: "Italiano",
+        vpn: "Nessuna VPN",
+        zip: "Non richiesto",
+        steps: [
+          "Accessibile direttamente dall'Italia su nowtv.it senza VPN."
+        ]
+      }
+    ]
+  }
+];
+
+let currentFilter = 'ALL';
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function toggleGuide(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('open');
+}
+
+function toggleModal(show) {
+  const m = document.getElementById('vpnModal');
+  if (show) m.classList.add('open');
+  else m.classList.remove('open');
+}
+
+function copyText(txt) {
+  if (navigator.clipboard) navigator.clipboard.writeText(txt);
+  alert("Codice CAP copiato: " + txt);
+}
+
+function addCustomSearch() {
+  const q = document.getElementById('searchInput').value.trim();
+  if (!q) return;
+  const newItem = {
+    id: Date.now(),
+    title: q,
+    category: "FILM",
+    sub: "Ricerca Globale Instantanea",
+    freeBest: { name: "🇺🇸 Tubi TV / 🇨🇭 Play RSI / 🇮🇹 RaiPlay", price: "GRATIS (0€)" },
+    cheapBest: { name: " Apple TV / Prime Video (Noleggio)", price: "1,99€ - 3,99€" },
+    providers: [
+      {
+        name: "🇨🇭 Play RSI / 🇮🇹 RaiPlay / Mediaset",
+        country: "Svizzera / Italia",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Italiano",
+        vpn: "Svizzera (per RSI) o Nessuna VPN (Italia)",
+        zip: "6900",
+        steps: [
+          "Controlla prima su RaiPlay.it e Mediaset Infinity senza VPN.",
+          "Per eventi sportivi o film in prima visione gratis in italiano, attiva VPN su Svizzera e cerca '" + q + "' su rsi.ch/play."
+        ]
+      },
+      {
+        name: "🇺🇸 Tubi TV / Pluto TV USA",
+        country: "Stati Uniti",
+        price: "GRATIS",
+        isFree: true,
+        lang: "Inglese",
+        vpn: "Server VPN: USA (ProtonVPN Gratis)",
+        zip: "10001",
+        steps: [
+          "Attiva ProtonVPN Free su server USA.",
+          "Vai su tubitv.com o pluto.tv in modalità Incognito e cerca '" + q + "'."
+        ]
+      }
+    ]
+  };
+  DATA.unshift(newItem);
+  render();
+}
+
+function render() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const grid = document.getElementById('cardsGrid');
+
+  const filtered = DATA.filter(item => {
+    const matchText = item.title.toLowerCase().includes(q) || item.sub.toLowerCase().includes(q);
+    if (!matchText) return false;
+    if (currentFilter === 'ALL') return true;
+    if (currentFilter === 'FREE') return item.providers.some(p => p.isFree);
+    return item.category === currentFilter;
+  });
+
+  grid.innerHTML = filtered.map(item => `
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <span class="badge-cat">${item.category}</span>
+          <div class="card-title">${item.title}</div>
+          <div class="card-sub">${item.sub}</div>
+        </div>
+      </div>
+
+      <div class="highlights">
+        <div class="hl-free">
+          <div class="hl-label">🔥 Migliore GRATIS</div>
+          <div class="hl-plat">${item.freeBest.name}</div>
+          <div class="hl-price" style="color:var(--green)">${item.freeBest.price}</div>
+        </div>
+        <div class="hl-cheap">
+          <div class="hl-label">💸 Prezzo Più Basso</div>
+          <div class="hl-plat">${item.cheapBest.name}</div>
+          <div class="hl-price" style="color:var(--amber)">${item.cheapBest.price}</div>
+        </div>
+      </div>
+
+      <div class="prov-list">
+        ${item.providers.map((p, idx) => {
+          const gId = 'guide_' + item.id + '_' + idx;
+          return `
+            <div class="prov-item">
+              <div class="prov-top">
+                <span class="prov-name">${p.name}</span>
+                <span class="price-tag ${p.isFree ? 'price-free' : 'price-paid'}">${p.price}</span>
+              </div>
+              <div class="prov-meta">🌍 ${p.country} • 🗣️ ${p.lang}</div>
+              <button class="btn-guide" onclick="toggleGuide('${gId}')">
+                🔓 Come vederlo (Passaggi + VPN) ▼
+              </button>
+              <div id="${gId}" class="guide-box">
+                <div style="color:var(--green);font-weight:700;margin-bottom:4px;">🛡️ ${p.vpn}</div>
+                <ol class="step-list">
+                  ${p.steps.map(s => `<li>${s}</li>`).join('')}
+                </ol>
+                <div style="margin-top:6px;font-size:11px;color:var(--muted);">
+                  CAP Estero consigliato: <span class="zip-badge" onclick="copyText('${p.zip}')">${p.zip} (Tocca per copiare)</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+render();
+</script>
+</body>
+</html>
